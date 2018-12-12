@@ -1,0 +1,119 @@
+con estas funciones puedes conectar a la base de datos de sql mediante vfp
+pegalas en un programa funciones.pgr i waalla estas listo
+
+****FUNCIONES SQL SERVER*****
+
+**** SE CONECTA A LA BASE DE DATOS ****
+
+function conectar_base_datos(nombre_servidor,nombre_base_da tos,nombre_usuario,clave_usuario)
+conectar="Driver={SQL Server};";
++"Server="+nombre_servidor+";";
++"Database="+nombre_base_datos+";";
++"uid="+nombre_usuario+";"+"pwd="+clave_usuario+"; "
+nu_conexion=sqlstringconnect(conectar)
+
+if nu_conexion<=0
+messagebox('ESTE USUARIO NO TIENE CONEXION A LA BASE DE DATOS',64,'AVISO')
+return .f.
+else
+_numero_conexion=nu_conexion
+return .t.
+endif
+endfunc
+
+
+**** INSERTA REGISTRO EN LA BASE DE DATOS RECIBIENDO LA TABLA, CADENA DE CAMPOS Y CADENA DE VALORES ****
+function inserta_registro(tabla,campos,valores)
+
+sql_insert='insert into '+tabla+' ('+campos+' ) '+'values ( '+valores+' ) '
+if sqlexec(_numero_conexion,sql_insert)=1
+=sqlcommit(_numero_conexion)
+else
+=sqlrollback(_numero_conexion)
+endif
+endfunc
+
+**** ACTUALIZA REGISTRO EN LA BASE DE DATOS RECIBIENDO LA TABLA, CADENA DE CAMPOS Y CADENA DE VALORES ****
+function actualiza_registro(tabla,campos,condicion)
+
+sql_actualiza='update '+tabla+ ' set ' +campos+ ' where '+condicion
+if sqlexec(_numero_conexion,sql_actualiza)=1
+=sqlcommit(_numero_conexion)
+else
+=sqlrollback(_numero_conexion)
+endif
+
+endfunc
+
+**** BUSCA SI EXISTE UN VALOR EN LA TABLA****
+
+function busca_si_existe(nombre_tabla,campo_compara,valor_b usca)
+sql_busca='select count('+campo_compara+') as encuentra'+' from '+nombre_tabla+' where '+nombre_tabla+"."+campo_compara+"="+"'"+valor_bus ca+"'"
+
+sqlexec(_numero_conexion,sql_busca,'cbusca')
+if cbusca.encuentra<=0
+select cbusca
+use
+return .f.
+else
+select cbusca
+use
+return .t.
+endif
+endfunc
+
+**** BUSCA SI EXISTE UN VALOR EN LA TABLA Y RETORNA EL CAMPO QUE SE ELIJE****
+
+function busca_valor(nombre_tabla,campo_elije,condicion)
+
+tempo='TE'+substr(sys(2015),3,8)
+
+sql_busca_valor='select '+campo_elije+ ' from '+nombre_tabla+ ' where '+condicion
+valor_retorna=''
+sqlexec(_numero_conexion,sql_busca_valor,tempo)
+if !empty('tempo')
+select &tempo
+combina=&tempo..&campo_elije
+valor_retorna=combina
+use
+return valor_retorna
+else
+use
+return valor_retorna
+endif
+endfunc
+
+function retorna_query(tablas,campos,condicion)
+
+tempo='TE'+substr(sys(2015),3,8)
+if !empty(condicion)
+sql_busca='select '+campos+ ' from '+tablas+ ' where '+condicion
+else
+sql_busca='select '+campos+ ' from '+tablas
+endif
+sqlexec(_numero_conexion,sql_busca,tempo)
+return tempo
+endfunc
+
+function destruye_query(query)
+if used ('&query')
+select &query
+use
+endif
+endfunc
+
+function secuencia(tabla,campo,tipo,longitud)
+tempo='TE'+substr(sys(2015),3,8)
+sql_secuencia='select max'+'('+campo+') as '+campo +' from '+tabla
+sqlexec(_numero_conexion,sql_secuencia,tempo)
+secuencia=&tempo..&campo
+SELECT &tempo
+use
+if tipo='N'
+return secuencia+1
+else
+res=val(secuencia)+1
+secuencia=replicate("0",longitud-(len(allt(str(res)))))+(allt(str(res)))
+return secuencia
+endif
+endfunc

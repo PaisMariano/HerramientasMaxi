@@ -1,0 +1,15 @@
+AGREGAR DATOS AL LISTBOX "Procedimiento: LostFocus"
+fila = 0
+fila = thisform.list1.newIndex
+fila=fila+1
+thisform.list1.addlistitem(thisform.text6.text,fila,1)
+thisform.list1.addlistitem(thisform.text7.text,fila,2)
+thisform.list1.addlistitem(thisform.text8.text,fila,3)
+thisform.list1.addlistitem(thisform.text9.text,fila,4)
+thisform.list1.addlistitem(thisform.text10.text,fila,5)
+thisform.list1.addlistitem(thisform.text11.text,fila,6)
+thisform.list1.addlistitem(thisform.text12.text,fila,7)
+thisform.list1.addlistitem(thisform.text13.text,fila,8)
+thisform.list1.addlistitem(thisform.text14.text,fila,9)
+THISFORM.list1.ColumnWidths=("35,45,245,32,35,31,37,50,45")
+thisform.texto6.Value=fila
