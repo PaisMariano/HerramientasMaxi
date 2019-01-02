@@ -1,0 +1,8 @@
+	
+	UPDATE DATOS\mxart SET COMANDA1 = "", COMANDA2 = "" WHERE EMPTY(TEXTO1)
+ 	UPDATE DATOS\mxart SET COMANDA1 = "U", COMANDA2 = "" WHERE TEXTO1 = "1"
+ 	UPDATE DATOS\mxart SET COMANDA1 = "U", COMANDA2 = "1" WHERE TEXTO1 = "2"
+ 	
+ 
+ 	 		
+	WAIT WINDOW "Comandas actualizadas correctamente!" TIMEOUT 3
